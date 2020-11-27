@@ -5,14 +5,15 @@ import Interfaces.Piece.IPiece;
 import Piece.*;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class Board implements IBoard {
 
     private Side[][] _locations = new Side[8][8];
-    private String[][] _representation = new String[8][17];
+    private String[][] _representation = new String[8][8];
+
     private Map<PieceType, List<Piece>> _whitePieceLocations = new HashMap<>();
     private Map<PieceType, List<Piece>> _blackPieceLocations = new HashMap<>();
+
     private Side turn = Side.WHITE;
 
     private static Scanner scanner = new java.util.Scanner(System.in);
@@ -28,24 +29,24 @@ public class Board implements IBoard {
         }
 
         //initial state
-        for (int i = 0; i < 9; i++) {
+        for (int column = 0; column < 8; column++) {
             for (int row = 0; row < 8; row++) {
                 //adding bars
-                _representation[row][i * 2] = "|";
-                _representation[row][Math.abs(i * 2 - 1)] = " ";
+                _representation[row][column] = " ";
             }
         }
 
         //populate mapping lists
+        printBoard();
         populate();
     }
 
     public void printBoard() {
         for (int row = 7; row >= 0; row--) {
-            for (int column = 0; column < 17; column++) {
-                System.out.print(_representation[row][column]);
+            for (int column = 0; column < 8; column++) {
+                System.out.print("|"+_representation[row][column]);
             }
-            System.out.println("" + (row + 1));
+            System.out.println("|" + (row + 1));
         }
         System.out.println(" A B C D E F G H");
     }
@@ -168,7 +169,7 @@ public class Board implements IBoard {
             case 'b':
                 column++;
             case 'a':
-                column++;
+//                column++;
         }
         return column;
     }
@@ -192,17 +193,17 @@ public class Board implements IBoard {
 
     private List<Piece> generateList(PieceType pieceType, Side side) {
 
-        int row = 1;
+        int row = 0;
         List<Piece> pieces = new ArrayList<Piece>();
         if (pieceType != PieceType.PAWN) {
             if (side.equals(Side.BLACK)) {
-                row = 8;
+                row = 7;
             }
         } else {
             if (side.equals(Side.BLACK)) {
-                row = 7;
+                row = 6;
             } else {
-                row = 2;
+                row = 1;
             }
         }
         switch (pieceType) {

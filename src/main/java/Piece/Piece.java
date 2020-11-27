@@ -3,9 +3,7 @@ package Piece;
 import Enums.Side;
 import Interfaces.Piece.IPiece;
 
-import java.io.NotActiveException;
-
-public class Piece implements IPiece {
+public abstract class Piece implements IPiece{
 
     private String _type = "";
     private Side _side;

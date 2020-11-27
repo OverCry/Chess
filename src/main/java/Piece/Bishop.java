@@ -2,7 +2,7 @@ package Piece;
 
 import Enums.Side;
 
-public class Bishop extends Piece {
+public class Bishop extends Piece{
     private String _type = "B";
 
     public Bishop(Side side, int row, int column) {

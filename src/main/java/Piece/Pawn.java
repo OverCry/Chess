@@ -14,13 +14,4 @@ public class Pawn extends Piece  {
         return _type;
     }
 
-//    @Override
-//    public void setRow(int row){
-//        _row = row;
-//    }
-//
-//    @Override
-//    public void setColumn(){
-//
-//    }
 }
