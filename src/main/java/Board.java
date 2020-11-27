@@ -1,5 +1,7 @@
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.IBoard;
+import Interfaces.Piece.IPiece;
 import Piece.*;
 
 import java.util.ArrayList;
@@ -9,75 +11,81 @@ import java.util.Map;
 
 public class Board implements IBoard {
 
-    //TODO maybe to enum?
-    private final int KING = 0;
-    private final int PAWN = 1;
-    private final int ROOK = 2;
-    private final int KNIGHT = 3;
-    private final int BISHOP = 4;
-    private final int QUEEN = 5;
-
-    //TODO consider which would look nicer
-    private List<List<Piece>> _whitePieceLocations = new ArrayList<List<Piece>>();
-    private List<List<Piece>> _blackPieceLocations = new ArrayList<List<Piece>>();
-//private Map<String,List<Piece>> _pieceLocations = new HashMap<String,List<Piece>>();
+    private Side[][] locations = new Side[8][8];
+//    private Map<Integer, Map<Integer, Piece>> _pieceLocations = new HashMap<>();
+    private Map<PieceType, List<Piece>> _whitePieceLocations = new HashMap<>();
+    private Map<PieceType, List<Piece>> _blackPieceLocations = new HashMap<>();
 
 
-    public Board (){
+    public Board() {
+
+//        _pieceLocations.put(1,new HashMap<Integer, Piece>(Map.of()));
+        for (int i=0;i<8;i++){
+            locations[7][i] = Side.BLACK;
+            locations[6][i] = Side.BLACK;
+            locations[1][i] = Side.WHITE;
+            locations[0][i] = Side.WHITE;
+        }
+
         //populate mapping lists
         populate();
-//        _pieceLocations.put("KING", new List<Piece>());
     }
 
-    private void populate(){
+    public void printBoard(){
+
+    }
+
+    private void populate() {
         List<Piece> allPiece = new ArrayList<Piece>();
-        allPiece.addAll(generateList(KING));
-        allPiece.addAll(generateList(PAWN));
-        allPiece.addAll(generateList(ROOK));
-        allPiece.addAll(generateList(KNIGHT));
-        allPiece.addAll(generateList(BISHOP));
-        allPiece.addAll(generateList(QUEEN));
+        for (PieceType piece: PieceType.values()) {
+            _whitePieceLocations.put(piece, generateList(piece, Side.WHITE));
+            _blackPieceLocations.put(piece, generateList(piece, Side.BLACK));
+        }
         System.out.println("Populated");
     }
 
-    private List<Piece> generateList(int pieceType){
+    private List<Piece> generateList(PieceType pieceType, Side side) {
+
+        int row=1;
         List<Piece> pieces = new ArrayList<Piece>();
-        switch (pieceType)
-        {
+        if (pieceType!=PieceType.PAWN){
+            if (side.equals(Side.BLACK)){
+                row=8;
+            }
+        } else {
+            if (side.equals(Side.BLACK)){
+                row=7;
+            } else {
+                row=2;
+            }
+        }
+        switch (pieceType) {
             case KING:
-                pieces.add(new King(Side.WHITE,1,5));
-                pieces.add(new King(Side.BLACK,8,5));
+                pieces.add(new King(side, row, 5));
                 break;
             case QUEEN:
-                pieces.add(new Queen(Side.WHITE,1,4));
-                pieces.add(new Queen(Side.BLACK,8,4));
+                pieces.add(new Queen(side, row, 4));
                 break;
             case BISHOP:
-                for (int i=1;i<=2;i++) {
-                    pieces.add(new Bishop(Side.WHITE, 1, i*3));
-                    pieces.add(new Bishop(Side.BLACK, 8, i*3));
+                for (int i = 1; i <= 2; i++) {
+                    pieces.add(new Bishop(side, row, i*3));
                 }
                 break;
             case KNIGHT:
-                for (int i=0;i<2;i++) {
-                    pieces.add(new Knight(Side.WHITE, 1, 2+(i*5)));
-                    pieces.add(new Knight(Side.BLACK, 8, 2+(i*5)));
+                for (int i = 0; i < 2; i++) {
+                    pieces.add(new Knight(side, row,  2 + (i * 5)));
                 }
                 break;
             case ROOK:
-                for (int i=0;i<2;i++) {
-                    pieces.add(new Rook(Side.WHITE, 1, 1+(i*7)));
-                    pieces.add(new Rook(Side.BLACK, 8, 1+(i*7)));
+                for (int i = 0; i < 2; i++) {
+                    pieces.add(new Rook(side, row,  1 + (i * 7)));
                 }
                 break;
             case PAWN:
-                for (int i=1;i<=8;i++) {
-                    pieces.add(new Pawn(Side.WHITE, 2, i));
-                    pieces.add(new Pawn(Side.BLACK, 7, i));
+                for (int i = 1; i <= 8; i++) {
+                    pieces.add(new Pawn(side, row,  i));
                 }
                 break;
-
-
         }
         return pieces;
     }

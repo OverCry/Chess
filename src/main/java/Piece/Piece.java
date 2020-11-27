@@ -1,8 +1,9 @@
 package Piece;
 
 import Enums.Side;
+import Interfaces.Piece.IPiece;
 
-public class Piece {
+public class Piece implements IPiece {
 
     private Side _side;
     private int _row;
@@ -12,5 +13,9 @@ public class Piece {
         _side = side;
         _row = row;
         _column = column;
+    }
+
+    public Side getSide(){
+        return _side;
     }
 }
