@@ -11,7 +11,28 @@ public class Rook extends Piece  {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMove){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+        //check if same row or same column
+//        if (endPosition.getRow()!=getRow() && endPosition.getColumn()!=getColumn()){
+//            return false;
+//        }
+        //check if anything is blocking between it
+        if (endPosition.getRow()==getRow()){
+            //same row
+            //check which column is larger
+            if (endPosition.getColumn()>getColumn()){
+
+            } else {
+
+            }
+        } else if (endPosition.getColumn()==getColumn()){
+            if (endPosition.getRow()>getRow()){
+
+            } else {
+
+            }
+        }
+
         System.out.println("ROOK");
 
         return true;

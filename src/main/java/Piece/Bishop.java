@@ -11,7 +11,7 @@ public class Bishop extends Piece{
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMove){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
         System.out.println("BISHOP");
         return true;
     }

@@ -17,7 +17,8 @@ public class Board implements IBoard {
     //for printing out the output
     private String[][] _representation = new String[8][8];
     //indicate what was the last move
-    private ICoordinate _lastPosition = new Coordinate(-1, -1);
+    private  ICoordinate _lastOriginalPosition = new Coordinate(-1,-1);
+    private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
 //    private int _lastRow = -1;
 //    private int _lastColumn = -1;
 
@@ -60,7 +61,7 @@ public class Board implements IBoard {
                 //font colour
                 if (_locations[row][column] != null) {
                     //bold last move
-                    if (_lastPosition.getRow() == row && _lastPosition.getColumn() == column) {
+                    if (_lastFinalPosition.getRow() == row && _lastFinalPosition.getColumn() == column) {
                         System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD.getRepresentation() : Colours.BLACK_BOLD.getRepresentation()));
                     } else {
                         System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED.getRepresentation() : Colours.BLACK.getRepresentation()));
@@ -112,20 +113,15 @@ public class Board implements IBoard {
 
     private void move(String origin, String end) {
 
+        //check if valid inputs
         String inputRegex = "[abcdefgh]{1}[12345678]{1}";
-
         if (!Pattern.matches(inputRegex, origin) || !Pattern.matches(inputRegex, end)) {
             System.out.println("Invalid Inputs. Please try again");
-
             return;
         }
 
         // check if final destination is free or different side
-        // calculate column
-//        int startRow = Character.getNumericValue(origin.charAt(1))-1;
-//        int endRow = Character.getNumericValue(end.charAt(1))-1;
-//        int startColumn = convertAlphaToInt(origin.charAt(0));
-//        int endColumn = convertAlphaToInt(end.charAt(0));
+        // calculate positions
         ICoordinate startPosition = new Coordinate(Character.getNumericValue(origin.charAt(1)) - 1,
                 convertAlphaToInt(origin.charAt(0)));
         ICoordinate endPosition = new Coordinate(Character.getNumericValue(end.charAt(1)) - 1,
@@ -134,7 +130,7 @@ public class Board implements IBoard {
         Side endpoint = _locations[endPosition.getRow()][endPosition.getColumn()];
         //check to make sure your side isn't on the desired location
         if (endpoint == turn) {
-            System.out.println("You cannot take your own piece. Please try again");
+            System.out.println("You cannot try to take your own piece. Please try again");
             return;
         }
 
@@ -158,13 +154,13 @@ public class Board implements IBoard {
 
         //check if move is allowed
         //TODO insert logic to check if move is allowed
-        if (movingPiece.legal(_locations,endPosition,_lastPosition)){
-
+        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition )){
+            changePiece(movingPiece, startPosition, endPosition);
         }
 
-        //todo move this into logic above when complete
+        //todo move this into logic above when complete (moved in for now)
         //move the piece
-        changePiece(movingPiece, startPosition, endPosition);
+//        changePiece(movingPiece, startPosition, endPosition);
     }
 
     /**
@@ -174,6 +170,11 @@ public class Board implements IBoard {
      * @param endPosition
      */
     private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition) {
+
+        //todo moved store latest up to make it cohesive
+        _lastOriginalPosition = piece.getPosition();
+        //store latest move
+        _lastFinalPosition = endPosition;
 
         piece.setPosition(endPosition);
 
@@ -188,8 +189,7 @@ public class Board implements IBoard {
         //change side's turn
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
 
-        //store latest move
-        _lastPosition = endPosition;
+
 
     }
 

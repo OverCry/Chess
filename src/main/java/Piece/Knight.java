@@ -11,7 +11,8 @@ public class Knight extends Piece  {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMove){
+    //position, if allowed to be moved on, CAN be moved on. check if it is allowed
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
         System.out.println("KNIGHT");
 
         return true;

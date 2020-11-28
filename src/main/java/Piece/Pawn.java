@@ -11,7 +11,14 @@ public class Pawn extends Piece  {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMove){
+    //position, if allowed to be moved on, CAN be moved on. check if it is allowed
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+        // check if moving forward
+        // double and single
+
+        // check if taking
+        //check if empasant
+
         System.out.println("PAWN");
 
         return true;
