@@ -13,4 +13,4 @@ This is an attempt to take some consideration of good coding practices.
 
 ## Compromises 
 1. Rather than typical chess notation, the player will input the original location and the final destination of the piece.
-2. The black side is indicated with lower font rather than a colour difference
+2. The black side is NO LONGER indicated with lower font rather than a colour difference. Colours are now used to differentiate between each side. 
