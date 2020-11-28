@@ -1,12 +1,18 @@
 package Piece;
 
 import Enums.Side;
+import Interfaces.ICoordinate;
 
 public class King extends Piece{
     private String _type = "K";
 
     public King(Side side, int row, int column) {
         super(side, row, column);
+    }
+
+    //TODO incomplete
+    public boolean legal(Side[][] locations, ICoordinate endPosition){
+        return true;
     }
 
     @Override

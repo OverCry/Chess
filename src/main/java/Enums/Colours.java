@@ -1,3 +1,5 @@
+package Enums;
+
 public enum Colours {
     // Regular Colors
     BLACK("\033[0;30m"),   // BLACK

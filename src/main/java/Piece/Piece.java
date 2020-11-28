@@ -8,12 +8,12 @@ import Piece.Support.Coordinate;
 public abstract class Piece implements IPiece{
 
     private String _type = "";
-    private Side _side;
-    private ICoordinate positions;
+    private final Side _side;
+    private ICoordinate _positions;
 
     public Piece(Side side, int row, int column) {
         _side = side;
-        positions = new Coordinate(row, column);
+        _positions = new Coordinate(row, column);
     }
 
     public Side getSide(){
@@ -21,20 +21,30 @@ public abstract class Piece implements IPiece{
     }
 
     public int getRow() {
-        return positions.getRow();
+        return _positions.getRow();
     }
 
     public int getColumn() {
-        return positions.getColumn();
+        return _positions.getColumn();
     }
 
     public void setRow(int row ) {
-        positions.setRow(row);
+        _positions.setRow(row);
     }
 
     public void setColumn(int column) {
-        positions.setColumn(column);
+        _positions.setColumn(column);
     }
+
+    public ICoordinate getPosition(){
+        return _positions;
+    }
+
+
+    public void setPosition(ICoordinate coordinate){
+        _positions =coordinate;
+    }
+
 
     public String getType(){
         return _type;

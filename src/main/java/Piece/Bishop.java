@@ -1,6 +1,7 @@
 package Piece;
 
 import Enums.Side;
+import Interfaces.ICoordinate;
 
 public class Bishop extends Piece{
     private String _type = "B";
@@ -8,6 +9,12 @@ public class Bishop extends Piece{
     public Bishop(Side side, int row, int column) {
         super(side, row, column);
     }
+
+    //TODO incomplete
+    public boolean legal(Side[][] locations, ICoordinate endPosition){
+        return true;
+    }
+
 
     @Override
     public String getType(){
