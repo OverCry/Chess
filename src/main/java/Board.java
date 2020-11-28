@@ -8,11 +8,18 @@ import java.util.*;
 
 public class Board implements IBoard {
 
+    //to quickly indicate which side each piece is on
     private Side[][] _locations = new Side[8][8];
+    //for printing out the output
     private String[][] _representation = new String[8][8];
+    //indicate what was the last move
+    private int lastRow = -1;
+    private int lastColumn = -1;
 
+    //collection of all pieces
     private Map<PieceType, List<Piece>> _pieceLocation = new HashMap<>();
 
+    //current side's turn
     private Side turn = Side.WHITE;
 
     private static Scanner scanner = new java.util.Scanner(System.in);
@@ -43,19 +50,25 @@ public class Board implements IBoard {
         System.out.println();
         for (int row = 7; row >= 0; row--) {
             for (int column = 0; column < 8; column++) {
-                System.out.print(Colours.WHITE + "|"  + Colours.RESET);
+//                System.out.print(Colours.WHITE + "|"  + Colours.RESET);
 
-//                if (_locations[row][column]!=null){
-//                    System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.WHITE : Colours.BLACK ));
-//                }
+                //font colour
+                if (_locations[row][column]!=null){
+                    //bold last move
+                    if (lastRow == row && lastColumn == column){
+                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD : Colours.BLACK_BOLD));
+                    } else {
+                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED : Colours.BLACK));
+                    }
+                }
 
-                System.out.print(
-                        (_locations[row][column]!=null ? (_locations[row][column].equals(Side.WHITE) ? Colours.RED : Colours.BLACK ):"") +
-                        _representation[row][column] + Colours.RESET);
+                //background colour
+                //TODO CHANGE BACKGROUND COLOUR TO NOT LOOK UGLY CURRENTLY JUST FOR CONTRAST
+                System.out.print(((row+column)%2==0 ? Colours.YELLOW_BACKGROUND : Colours.PURPLE_BACKGROUND )+ " "+_representation[row][column]+ " " + Colours.RESET);
             }
             System.out.println(Colours.WHITE + "|" + (row + 1) + Colours.RESET);
         }
-        System.out.println(Colours.WHITE +" A B C D E F G H"+ Colours.RESET);
+        System.out.println(Colours.WHITE +" A  B  C  D  E  F  G  H"+ Colours.RESET);
     }
 
     private void populate() {
@@ -68,7 +81,7 @@ public class Board implements IBoard {
         //populate representation
         for (List<Piece> pieceList : _pieceLocation.values()) {
             for (IPiece piece : pieceList) {
-                addBoard((piece.getSide().equals(Side.WHITE) ? piece.getType(): piece.getType().toLowerCase()), piece.getRow(), piece.getColumn());
+                addBoard(piece.getType(), piece.getRow(), piece.getColumn());
             }
         }
     }
