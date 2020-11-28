@@ -13,8 +13,8 @@ public class Board implements IBoard {
     //for printing out the output
     private String[][] _representation = new String[8][8];
     //indicate what was the last move
-    private int lastRow = -1;
-    private int lastColumn = -1;
+    private int _lastRow = -1;
+    private int _lastColumn = -1;
 
     //collection of all pieces
     private Map<PieceType, List<Piece>> _pieceLocation = new HashMap<>();
@@ -55,7 +55,7 @@ public class Board implements IBoard {
                 //font colour
                 if (_locations[row][column]!=null){
                     //bold last move
-                    if (lastRow == row && lastColumn == column){
+                    if (_lastRow == row && _lastColumn == column){
                         System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD : Colours.BLACK_BOLD));
                     } else {
                         System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED : Colours.BLACK));
@@ -152,11 +152,13 @@ public class Board implements IBoard {
 
                 //change side's turn
                 turn = (turn.equals(Side.WHITE) ? Side.BLACK:Side.WHITE);
+
+                //store latest move
+                _lastRow=endRow;
+                _lastColumn=endColumn;
                 break;
             }
         }
-
-        System.out.println("Invalid Move. Please try again");
     }
 
     private int convertAlphaToInt(char character) {
