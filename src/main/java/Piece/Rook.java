@@ -11,7 +11,9 @@ public class Rook extends Piece  {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMove){
+        System.out.println("ROOK");
+
         return true;
     }
 
