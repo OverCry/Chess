@@ -10,3 +10,7 @@ This is an attempt to take some consideration of good coding practices.
 1. The game can be played through terminal
 2. The game will know when the game is concluded
 3. The game will remember all moves done,
+
+## Compromises 
+1. Rather than typical chess notation, the player will input the original location and the final destination of the piece.
+2. The black side is indicated with lower font rather than a colour difference
