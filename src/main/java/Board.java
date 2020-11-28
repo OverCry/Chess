@@ -56,19 +56,19 @@ public class Board implements IBoard {
                 if (_locations[row][column]!=null){
                     //bold last move
                     if (_lastRow == row && _lastColumn == column){
-                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD : Colours.BLACK_BOLD));
+                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD.getRepresentation() : Colours.BLACK_BOLD.getRepresentation()));
                     } else {
-                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED : Colours.BLACK));
+                        System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED.getRepresentation() : Colours.BLACK.getRepresentation()));
                     }
                 }
 
                 //background colour
                 //TODO CHANGE BACKGROUND COLOUR TO NOT LOOK UGLY CURRENTLY JUST FOR CONTRAST
-                System.out.print(((row+column)%2==0 ? Colours.YELLOW_BACKGROUND : Colours.PURPLE_BACKGROUND )+ " "+_representation[row][column]+ " " + Colours.RESET);
+                System.out.print(((row+column)%2==0 ? Colours.YELLOW_BACKGROUND.getRepresentation() : Colours.PURPLE_BACKGROUND.getRepresentation() )+ " "+_representation[row][column]+ " " + Colours.RESET.getRepresentation());
             }
-            System.out.println(Colours.WHITE + "|" + (row + 1) + Colours.RESET);
+            System.out.println(Colours.WHITE.getRepresentation() + " "+ (row + 1) + Colours.RESET.getRepresentation());
         }
-        System.out.println(Colours.WHITE +" A  B  C  D  E  F  G  H"+ Colours.RESET);
+        System.out.println(Colours.WHITE.getRepresentation() +" A  B  C  D  E  F  G  H"+ Colours.RESET.getRepresentation());
     }
 
     private void populate() {
@@ -99,10 +99,14 @@ public class Board implements IBoard {
             System.out.print("To: ");
             String end = scanner.nextLine();
             move(original.toLowerCase(), end.toLowerCase());
+            //TODO UNCOMMENT
+//            if (checkmate()){
+//                break;
+//            }
         }
     }
 
-        private void move(String origin, String end) {
+    private void move(String origin, String end) {
 
         PieceType movingPiece = null;
 
@@ -160,6 +164,8 @@ public class Board implements IBoard {
             }
         }
     }
+
+
 
     private int convertAlphaToInt(char character) {
         int column = 0;
@@ -251,3 +257,28 @@ public class Board implements IBoard {
         return pieces;
     }
 }
+
+//    private boolean checkmate(){
+//        //find position of otherside king
+//        IPiece kingPiece = null;
+//        for (Piece piece :_pieceLocation.get(PieceType.KING)){
+//            if (piece.getSide()==turn){
+//                kingPiece = piece;
+//                break;
+//            }
+//        }
+//
+//        //find 'free' spots
+//        for (int row=kingPiece.getRow()-1; row<kingPiece.getRow()+2;row++){
+//            for (int column=kingPiece.getColumn()-1; column<kingPiece.getColumn()+2;column++){
+//                if (row>=0 && row <8 && column>=0 && column<8){
+//                    if (!_locations[row][column].equals(turn)){
+//                        // store locations
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        return false;
+//    }
