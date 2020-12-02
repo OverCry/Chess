@@ -12,7 +12,7 @@ public class King extends Piece{
 
     public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
         //TODO if wanted, check if this move will result in a check, otherwise, be happy
-        if (Math.abs(endPosition.getRow()-getRow())>1 && Math.abs(endPosition.getColumn()-getColumn())>1 ){
+        if (Math.abs(endPosition.getRow()-getRow())>1 || Math.abs(endPosition.getColumn()-getColumn())>1 ){
             return false;
         }
         System.out.println("KING");

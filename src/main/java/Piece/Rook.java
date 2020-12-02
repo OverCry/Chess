@@ -17,18 +17,37 @@ public class Rook extends Piece  {
 //            return false;
 //        }
         //check if anything is blocking between it
+        int smallRow=getRow();
+        int smallColumn=getColumn();
+        int bigRow=endPosition.getRow();
+        int bigColumn= endPosition.getColumn();
+
         if (endPosition.getRow()==getRow()){
             //same row
             //check which column is larger
-            if (endPosition.getColumn()>getColumn()){
+//            if (endPosition.getColumn()<getColumn()){
+//                //swap around
+//                int dummy = bigColumn;
+//                bigColumn = smallColumn;
+//                smallColumn = dummy;
+//            }
 
-            } else {
+//            for (int column = (e))
 
-            }
+
+
         } else if (endPosition.getColumn()==getColumn()){
-            if (endPosition.getRow()>getRow()){
+            if (endPosition.getRow()<getRow()){
+                //swap around
+                int dummy = bigRow;
+                bigRow = smallRow;
+                smallRow = dummy;
+            }
+        }
 
-            } else {
+
+        for (int row =smallRow;row<bigRow;row++){
+            for (int column =smallColumn;column<bigColumn;column++){
 
             }
         }

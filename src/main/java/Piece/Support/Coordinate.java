@@ -27,4 +27,27 @@ public class Coordinate implements ICoordinate {
     public void setColumn(int column) {
         _column = column;
     }
+
+//    @Override
+//    public boolean equals(Object o) {
+//
+//        // If the object is compared with itself then return true
+//        if (o == this) {
+//            return true;
+//        }
+//
+//        if (!(o instanceof Coordinate)) {
+//            return false;
+//        }
+//
+//        // typecast o to Complex so that we can compare data members
+//        Coordinate position = (Coordinate) o;
+//
+//        if (position._column == _column && position._row==_column){
+//            return true;
+//        }
+//        return false;
+//
+//    }
+
 }
