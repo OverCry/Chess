@@ -127,8 +127,16 @@ public class Board implements IBoard {
         ICoordinate endPosition = new Coordinate(Character.getNumericValue(end.charAt(1)) - 1,
                 convertAlphaToInt(end.charAt(0)));
 
+        //check to make sure you are moving your own piece
+        Side startPoint = _locations[startPosition.getRow()][startPosition.getColumn()];
+        if (!startPoint.equals(turn)){
+            System.out.println("You cannot move the opposite side. Please try again");
+            return;
+        }
+
+
         Side endpoint = _locations[endPosition.getRow()][endPosition.getColumn()];
-        //check to make sure your side isn't on the desired location
+        //check to make sure your side isn't on the end location
         if (endpoint == turn) {
             System.out.println("You cannot try to take your own piece. Please try again");
             return;
