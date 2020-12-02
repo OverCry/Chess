@@ -13,11 +13,8 @@ public class Knight extends Piece  {
     //TODO incomplete
     //position, if allowed to be moved on, CAN be moved on. check if it is allowed
     public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+
         //need to check if a legal knight move has taken place
-//        int smallRow=getRow();
-//        int smallColumn=getColumn();
-//        int bigRow=endPosition.getRow();
-//        int bigColumn= endPosition.getColumn();
         int rowDiff = Math.abs(getRow()-endPosition.getRow());
         int colDiff = Math.abs(getColumn()-endPosition.getColumn());
 
