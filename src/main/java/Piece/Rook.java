@@ -25,15 +25,18 @@ public class Rook extends Piece  {
         if (endPosition.getRow()==getRow()){
             //same row
             //check which column is larger
-//            if (endPosition.getColumn()<getColumn()){
-//                //swap around
-//                int dummy = bigColumn;
-//                bigColumn = smallColumn;
-//                smallColumn = dummy;
-//            }
+            if (endPosition.getColumn()<getColumn()){
+                //swap around
+                int dummy = bigColumn;
+                bigColumn = smallColumn;
+                smallColumn = dummy;
+            }
 
-//            for (int column = (e))
-
+            for (int column = smallColumn +1 ; column<bigColumn;column++){
+                if (locations[getRow()][column]!=null){
+                    return false;
+                }
+            }
 
 
         } else if (endPosition.getColumn()==getColumn()){
@@ -43,12 +46,11 @@ public class Rook extends Piece  {
                 bigRow = smallRow;
                 smallRow = dummy;
             }
-        }
 
-
-        for (int row =smallRow;row<bigRow;row++){
-            for (int column =smallColumn;column<bigColumn;column++){
-
+            for (int row = smallRow +1 ; row<bigRow;row++){
+                if (locations[row][getColumn()]!=null){
+                    return false;
+                }
             }
         }
 
