@@ -19,6 +19,7 @@ public class Board implements IBoard {
     //indicate what was the last move
     private  ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
+    private String _lastMove = "";
 
     //collection of all pieces
     private Map<PieceType, List<Piece>> _pieceLocation = new HashMap<>();
@@ -168,11 +169,11 @@ public class Board implements IBoard {
 
         //check if move is allowed
 
-        //give last move type
-        String lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
+        //set last move type
+        _lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
 
         //TODO insert logic to check if move is allowed
-        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition,lastMove)){
+        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition,_lastMove)){
             changePiece(movingPiece, startPosition, endPosition);
         }
     }
@@ -185,7 +186,20 @@ public class Board implements IBoard {
      */
     private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition) {
 
-        //todo moved store latest up to make it cohesive
+        //check if en passant
+        if (_lastMove.equals("P")){
+            if (Math.abs(_lastFinalPosition.getRow()- _lastOriginalPosition.getRow())==2){
+                if (_lastFinalPosition.getRow()==startPosition.getRow()){
+                    if  (_lastFinalPosition.getColumn()==endPosition.getColumn()){
+                        System.out.println(piece.getType());
+                        if  (piece.getType().equals("P")){
+                            addBoard(" ", _lastFinalPosition);
+                            _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;                        }
+                    }
+                }
+            }
+        }
+
         _lastOriginalPosition = piece.getPosition();
         //store latest move
         _lastFinalPosition = endPosition;
@@ -199,6 +213,10 @@ public class Board implements IBoard {
         //location
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];
         _locations[startPosition.getRow()][startPosition.getColumn()] = null;
+
+
+
+
 
         //change side's turn
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
