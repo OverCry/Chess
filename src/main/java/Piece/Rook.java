@@ -11,7 +11,7 @@ public class Rook extends Piece  {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType){
         //check if same row or same column
 //        if (endPosition.getRow()!=getRow() && endPosition.getColumn()!=getColumn()){
 //            return false;

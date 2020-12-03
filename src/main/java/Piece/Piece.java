@@ -1,5 +1,6 @@
 package Piece;
 
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 import Interfaces.Piece.IPiece;

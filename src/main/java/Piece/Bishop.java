@@ -11,7 +11,7 @@ public class Bishop extends Piece{
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType){
         //need to check if a legal bishop move has taken place
         int smallRow=getRow();
         int smallColumn=getColumn();

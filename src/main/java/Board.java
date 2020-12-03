@@ -17,10 +17,8 @@ public class Board implements IBoard {
     //for printing out the output
     private String[][] _representation = new String[8][8];
     //indicate what was the last move
-    private  ICoordinate _lastOriginalPosition = new Coordinate(-1,-1);
+    private  ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
-//    private int _lastRow = -1;
-//    private int _lastColumn = -1;
 
     //collection of all pieces
     private Map<PieceType, List<Piece>> _pieceLocation = new HashMap<>();
@@ -61,6 +59,7 @@ public class Board implements IBoard {
                 //font colour
                 if (_locations[row][column] != null) {
                     //bold last move
+
                     if (_lastFinalPosition.getRow() == row && _lastFinalPosition.getColumn() == column) {
                         System.out.print((_locations[row][column].equals(Side.WHITE) ? Colours.RED_BOLD.getRepresentation() : Colours.BLACK_BOLD.getRepresentation()));
                     } else {
@@ -168,14 +167,14 @@ public class Board implements IBoard {
         }
 
         //check if move is allowed
+
+        //give last move type
+        String lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
+
         //TODO insert logic to check if move is allowed
-        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition )){
+        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition,lastMove)){
             changePiece(movingPiece, startPosition, endPosition);
         }
-
-        //todo move this into logic above when complete (moved in for now)
-        //move the piece
-//        changePiece(movingPiece, startPosition, endPosition);
     }
 
     /**

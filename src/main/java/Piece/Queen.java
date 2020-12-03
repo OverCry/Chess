@@ -11,7 +11,7 @@ public class Queen extends Piece {
     }
 
     //TODO incomplete
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal) {
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType) {
         int smallRow = getRow();
         int smallColumn = getColumn();
         int bigRow = endPosition.getRow();

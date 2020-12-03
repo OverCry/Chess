@@ -10,7 +10,7 @@ public class King extends Piece{
         super(side, row, column);
     }
 
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal){
+    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType){
         //TODO if wanted, check if this move will result in a check, otherwise, be happy
         if (Math.abs(endPosition.getRow()-getRow())>1 || Math.abs(endPosition.getColumn()-getColumn())>1 ){
             return false;
