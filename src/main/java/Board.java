@@ -187,6 +187,7 @@ public class Board implements IBoard {
     private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition) {
 
         //check if en passant
+        //VERY JANK
         if (_lastMove.equals("P")){
             if (Math.abs(_lastFinalPosition.getRow()- _lastOriginalPosition.getRow())==2){
                 if (_lastFinalPosition.getRow()==startPosition.getRow()){
