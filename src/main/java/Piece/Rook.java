@@ -5,17 +5,14 @@ import Interfaces.ICoordinate;
 
 public class Rook extends Piece  {
     private String _type = "R";
+    private boolean _moved = false;
+
 
     public Rook(Side side, int row, int column) {
         super(side, row, column);
     }
 
-    //TODO incomplete
     public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType){
-        //check if same row or same column
-//        if (endPosition.getRow()!=getRow() && endPosition.getColumn()!=getColumn()){
-//            return false;
-//        }
         //check if anything is blocking between it
         int smallRow=getRow();
         int smallColumn=getColumn();
@@ -55,6 +52,8 @@ public class Rook extends Piece  {
         }
 
         System.out.println("ROOK");
+        _moved=true;
+
 
         return true;
     }

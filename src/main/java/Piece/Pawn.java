@@ -10,7 +10,6 @@ public class Pawn extends Piece {
         super(side, row, column);
     }
 
-    //TODO incomplete
     //position, if allowed to be moved on, CAN be moved on. check if it is allowed
     public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType) {
         int smallRow = getRow();

@@ -10,7 +10,6 @@ public class Queen extends Piece {
         super(side, row, column);
     }
 
-    //TODO incomplete
     public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType) {
         int smallRow = getRow();
         int smallColumn = getColumn();
