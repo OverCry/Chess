@@ -21,6 +21,8 @@ public interface IPiece {
 
     public String getType();
 
+    public boolean getMoved();
 
-    public boolean legal(Side[][] locations, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, String lastType);
+    public void setMoved();
+
 }

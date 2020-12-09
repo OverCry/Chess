@@ -11,6 +11,7 @@ public abstract class Piece implements IPiece{
     private String _type = "";
     private final Side _side;
     private ICoordinate _positions;
+    private boolean _moved =false;
 
     public Piece(Side side, int row, int column) {
         _side = side;
@@ -36,6 +37,15 @@ public abstract class Piece implements IPiece{
     public void setColumn(int column) {
         _positions.setColumn(column);
     }
+
+    public boolean getMoved() {
+        return _moved;
+    }
+
+    public void setMoved() {
+        _moved=true;
+    }
+
 
     public ICoordinate getPosition(){
         return _positions;

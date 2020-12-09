@@ -1,23 +1,27 @@
 import Enums.Colours;
+import Enums.Column;
 import Enums.PieceType;
 import Enums.Side;
 import Interfaces.IBoard;
 import Interfaces.ICoordinate;
+import Interfaces.IRulebook;
 import Interfaces.Piece.IPiece;
 import Piece.*;
 import Piece.Support.Coordinate;
+import Piece.Support.Rulebook;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class Board implements IBoard {
 
+    private IRulebook ruleCheck;
     //to quickly indicate which side each piece is on
     private Side[][] _locations = new Side[8][8];
     //for printing out the output
     private String[][] _representation = new String[8][8];
     //indicate what was the last move
-    private  ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
+    private ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
     private String _lastMove = "";
 
@@ -30,6 +34,7 @@ public class Board implements IBoard {
     private static Scanner scanner = new java.util.Scanner(System.in);
 
     public Board() {
+        ruleCheck = new Rulebook();
 
         //belonging
         for (int i = 0; i < 8; i++) {
@@ -87,12 +92,12 @@ public class Board implements IBoard {
         //populate representation
         for (List<Piece> pieceList : _pieceLocation.values()) {
             for (IPiece piece : pieceList) {
-                addBoard(piece.getType(), piece.getPosition());
+                modifyBoard(piece.getType(), piece.getPosition());
             }
         }
     }
 
-    private void addBoard(String piece, ICoordinate position) {
+    private void modifyBoard(String piece, ICoordinate position) {
         _representation[position.getRow()][position.getColumn()] = piece;
     }
 
@@ -105,9 +110,9 @@ public class Board implements IBoard {
             System.out.print("To: ");
             String end = scanner.nextLine();
             move(original.toLowerCase(), end.toLowerCase());
-            if (checkmate()) {
-                break;
-            }
+//            if (checkmate()) {
+//                break;
+//            }
         }
     }
 
@@ -168,12 +173,10 @@ public class Board implements IBoard {
         }
 
         //check if move is allowed
-
         //set last move type
         _lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
 
-        //TODO insert logic to check if move is allowed
-        if (movingPiece.legal(_locations,endPosition, _lastOriginalPosition, _lastFinalPosition,_lastMove)){
+        if (ruleCheck.legal(movingPiece,endPosition,_lastOriginalPosition,_lastFinalPosition,_representation,_pieceLocation)){
             changePiece(movingPiece, startPosition, endPosition);
         }
     }
@@ -194,7 +197,7 @@ public class Board implements IBoard {
                     if  (_lastFinalPosition.getColumn()==endPosition.getColumn()){
                         System.out.println(piece.getType());
                         if  (piece.getType().equals("P")){
-                            addBoard(" ", _lastFinalPosition);
+                            modifyBoard(" ", _lastFinalPosition);
                             _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;                        }
                     }
                 }
@@ -208,8 +211,8 @@ public class Board implements IBoard {
         piece.setPosition(endPosition);
 
         //representation
-        addBoard(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
-        addBoard(" ", startPosition);
+        modifyBoard(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
+        modifyBoard(" ", startPosition);
 
         //location
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];
@@ -226,51 +229,7 @@ public class Board implements IBoard {
 
     }
 
-    /**
-     * method to determine if a side is in checkmate
-     * @return
-     */
-    private boolean checkmate() {
-        //find position of other side king
-        IPiece kingPiece = null;
-        for (Piece piece : _pieceLocation.get(PieceType.KING)) {
-            if (piece.getSide() == turn) {
-                kingPiece = piece;
-                break;
-            }
-        }
 
-        //get a collection of movable spots
-        List<ICoordinate> freeLocations = new ArrayList<>();
-        //find 'free' spots
-        for (int row = kingPiece.getRow() - 1; row < kingPiece.getRow() + 2; row++) {
-            for (int column = kingPiece.getColumn() - 1; column < kingPiece.getColumn() + 2; column++) {
-                //check if on board
-                if (row >= 0 && row < 8 && column >= 0 && column < 8) {
-                    //check if position is NOT same side
-//                    if (!_locations[row][column].equals(turn)){
-                    if (!turn.equals(_locations[row][column])) {
-                        // store locations
-                        freeLocations.add(new Coordinate(row, column));
-                    }
-                }
-            }
-        }
-        //add its own position
-        freeLocations.add(kingPiece.getPosition());
-        //compare with 'attack' squares
-        for (PieceType type : PieceType.values()) {
-            for (Piece piece : _pieceLocation.get(type)) {
-                //todo reuse check method
-            }
-        }
-
-        //check if the piece is moveable or not
-        if (freeLocations.size() == 0) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * helper method to convert column value to integer
@@ -378,3 +337,48 @@ public class Board implements IBoard {
     }
 }
 
+//    /**
+//     * method to determine if a side is in checkmate
+//     * @return
+//     */
+//    private boolean checkmate() {
+//        //find position of other side king
+//        IPiece kingPiece = null;
+//        for (Piece piece : _pieceLocation.get(PieceType.KING)) {
+//            if (piece.getSide() == turn) {
+//                kingPiece = piece;
+//                break;
+//            }
+//        }
+//
+//        //get a collection of movable spots
+//        List<ICoordinate> freeLocations = new ArrayList<>();
+//        //find 'free' spots
+//        for (int row = kingPiece.getRow() - 1; row < kingPiece.getRow() + 2; row++) {
+//            for (int column = kingPiece.getColumn() - 1; column < kingPiece.getColumn() + 2; column++) {
+//                //check if on board
+//                if (row >= 0 && row < 8 && column >= 0 && column < 8) {
+//                    //check if position is NOT same side
+////                    if (!_locations[row][column].equals(turn)){
+//                    if (!turn.equals(_locations[row][column])) {
+//                        // store locations
+//                        freeLocations.add(new Coordinate(row, column));
+//                    }
+//                }
+//            }
+//        }
+//        //add its own position
+//        freeLocations.add(kingPiece.getPosition());
+//        //compare with 'attack' squares
+//        for (PieceType type : PieceType.values()) {
+//            for (Piece piece : _pieceLocation.get(type)) {
+//                //todo reuse check method
+//            }
+//        }
+//
+//        //check if the piece is moveable or not
+//        if (freeLocations.size() == 0) {
+//            return true;
+//        }
+//        return false;
+//    }
