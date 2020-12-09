@@ -19,7 +19,7 @@ public class Board implements IBoard {
     //to quickly indicate which side each piece is on
     private Side[][] _locations = new Side[8][8];
     //for printing out the output
-    private String[][] _representation = new String[8][8];
+    private PieceType[][] _representation = new PieceType[8][8];
     //indicate what was the last move
     private ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
@@ -48,7 +48,7 @@ public class Board implements IBoard {
         for (int column = 0; column < 8; column++) {
             for (int row = 0; row < 8; row++) {
                 //adding bars
-                _representation[row][column] = " ";
+                _representation[row][column] = null;
             }
         }
 
@@ -75,7 +75,9 @@ public class Board implements IBoard {
 
                 //background colour
                 //TODO CHANGE BACKGROUND COLOUR TO NOT LOOK UGLY CURRENTLY JUST FOR CONTRAST
-                System.out.print(((row + column) % 2 == 0 ? Colours.YELLOW_BACKGROUND.getRepresentation() : Colours.PURPLE_BACKGROUND.getRepresentation()) + " " + _representation[row][column] + " " + Colours.RESET.getRepresentation());
+                System.out.print(((row + column) % 2 == 0 ? Colours.YELLOW_BACKGROUND.getRepresentation() : Colours.PURPLE_BACKGROUND.getRepresentation()) + " "
+                        + (_representation[row][column] != null ? _representation[row][column].getRepresentation() : " ")
+                        + " " + Colours.RESET.getRepresentation());
             }
             System.out.println(Colours.WHITE.getRepresentation() + " " + (row + 1) + Colours.RESET.getRepresentation());
         }
@@ -97,7 +99,7 @@ public class Board implements IBoard {
         }
     }
 
-    private void modifyBoard(String piece, ICoordinate position) {
+    private void modifyBoard(PieceType piece, ICoordinate position) {
         _representation[position.getRow()][position.getColumn()] = piece;
     }
 
@@ -155,7 +157,7 @@ public class Board implements IBoard {
         }
 
         // see what piece is being moved
-        PieceType type = convertAlphaToType(_representation[startPosition.getRow()][startPosition.getColumn()]);
+        PieceType type = _representation[startPosition.getRow()][startPosition.getColumn()];
 
         IPiece movingPiece = null;
         //find piece
@@ -174,7 +176,7 @@ public class Board implements IBoard {
 
         //check if move is allowed
         //set last move type
-        _lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
+//        _lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
 
         if (ruleCheck.legal(movingPiece,endPosition,_lastOriginalPosition,_lastFinalPosition,_representation,_pieceLocation)){
             changePiece(movingPiece, startPosition, endPosition);
@@ -197,7 +199,13 @@ public class Board implements IBoard {
                     if  (_lastFinalPosition.getColumn()==endPosition.getColumn()){
                         System.out.println(piece.getType());
                         if  (piece.getType().equals("P")){
-                            modifyBoard(" ", _lastFinalPosition);
+                            for (IPiece pawn :_pieceLocation.get(PieceType.PAWN)){
+                                if (pawn.getRow()==_lastFinalPosition.getRow() && pawn.getColumn()== _lastFinalPosition.getColumn()){
+                                    _pieceLocation.get(PieceType.PAWN).remove(pawn);
+                                    break;
+                                }
+                            }
+                            modifyBoard(null, _lastFinalPosition);
                             _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;                        }
                     }
                 }
@@ -210,9 +218,15 @@ public class Board implements IBoard {
 
         piece.setPosition(endPosition);
 
+        //check if a piece is being taken
+        if(_locations[endPosition.getRow()][endPosition.getColumn()]!=null){
+
+        }
+
+
         //representation
         modifyBoard(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
-        modifyBoard(" ", startPosition);
+        modifyBoard(null, startPosition);
 
         //location
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];

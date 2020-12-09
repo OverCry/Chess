@@ -1,17 +1,18 @@
 package Piece;
 
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 
 public class Queen extends Piece {
-    private String _type = "Q";
+    private PieceType _type = PieceType.QUEEN;
 
     public Queen(Side side, int row, int column) {
         super(side, row, column);
     }
 
     @Override
-    public String getType() {
+    public PieceType getType() {
         return _type;
     }
 }

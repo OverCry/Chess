@@ -1,10 +1,11 @@
 package Piece;
 
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 
 public class Knight extends Piece  {
-    private String _type = "N";
+    private PieceType _type = PieceType.KNIGHT;
 
     public Knight(Side side, int row, int column) {
         super(side, row, column);
@@ -12,7 +13,7 @@ public class Knight extends Piece  {
 
 
     @Override
-    public String getType(){
+    public PieceType getType(){
         return _type;
     }
 }

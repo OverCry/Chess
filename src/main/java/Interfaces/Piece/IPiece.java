@@ -1,5 +1,6 @@
 package Interfaces.Piece;
 
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 
@@ -19,7 +20,7 @@ public interface IPiece {
 
     public void setPosition(ICoordinate coordinate);
 
-    public String getType();
+    public PieceType getType();
 
     public boolean getMoved();
 

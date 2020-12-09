@@ -1,10 +1,11 @@
 package Piece;
 
+import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 
 public class Pawn extends Piece {
-    private String _type = "P";
+    private PieceType _type = PieceType.PAWN;
 
     public Pawn(Side side, int row, int column) {
         super(side, row, column);
@@ -12,7 +13,7 @@ public class Pawn extends Piece {
 
 
     @Override
-    public String getType() {
+    public PieceType getType() {
         return _type;
     }
 

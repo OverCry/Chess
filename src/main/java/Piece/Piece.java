@@ -8,7 +8,7 @@ import Piece.Support.Coordinate;
 
 public abstract class Piece implements IPiece{
 
-    private String _type = "";
+    private PieceType _type = null;
     private final Side _side;
     private ICoordinate _positions;
     private boolean _moved =false;
@@ -57,11 +57,11 @@ public abstract class Piece implements IPiece{
     }
 
 
-    public String getType(){
+    public PieceType getType(){
         return _type;
     }
 
-    public void setType(String type){
+    public void PieceType(PieceType type){
         _type = type;
     }
 }
