@@ -1,5 +1,4 @@
 import Enums.Colours;
-import Enums.Column;
 import Enums.PieceType;
 import Enums.Side;
 import Interfaces.IBoard;
@@ -84,33 +83,13 @@ public class Board implements IBoard {
         System.out.println(Colours.WHITE.getRepresentation() + " A  B  C  D  E  F  G  H" + Colours.RESET.getRepresentation());
     }
 
-    private void populate() {
-        //add to list
-        for (Side side : Side.values()) {
-            for (PieceType piece : PieceType.values()) {
-                _pieceLocation.put(side, generateList(side));
-            }
-        }
-
-        //populate representation
-        for (List<Piece> pieceList : _pieceLocation.values()) {
-            for (IPiece piece : pieceList) {
-                modifyBoard(piece.getType(), piece.getPosition());
-            }
-        }
-    }
-
-    private void modifyBoard(PieceType piece, ICoordinate position) {
-        _representation[position.getRow()][position.getColumn()] = piece;
-    }
-
     public void play() {
         while (true) {
             printBoard();
             System.out.println("\n" + turn.toString() + "'s move");
             System.out.print("Move Piece: ");
             String original = scanner.nextLine();
-            if (original.equals("P")){
+            if (original.equals("P")) {
                 printAll();
             }
             System.out.print("To: ");
@@ -191,41 +170,52 @@ public class Board implements IBoard {
     private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition) {
 
         //check if en passant
-        //VERY JANK
-        //CHANGE
-//        if (_lastMove.equals("P")) {
-//            if (Math.abs(_lastFinalPosition.getRow() - _lastOriginalPosition.getRow()) == 2) {
-//                if (_lastFinalPosition.getRow() == startPosition.getRow()) {
-//                    if (_lastFinalPosition.getColumn() == endPosition.getColumn()) {
-//                        System.out.println(piece.getType());
-//                        if (piece.getType().equals("P")) {
-//                            for (IPiece pawn : _pieceLocation.get(PieceType.PAWN)) {
-//                                if (pawn.getRow() == _lastFinalPosition.getRow() && pawn.getColumn() == _lastFinalPosition.getColumn()) {
-//                                    _pieceLocation.get(PieceType.PAWN).remove(pawn);
-//                                    break;
-//                                }
-//                            }
-//                            modifyBoard(null, _lastFinalPosition);
-//                            _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        if (ruleCheck.isEnPassant()) {
+            //remove the pawn
+            for (IPiece pawn : _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE))) {
+                if (pawn.getRow() == _lastFinalPosition.getRow() && pawn.getColumn() == _lastFinalPosition.getColumn()) {
+                    _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE)).remove(pawn);
+                    break;
+                }
+            }
+            modifyDisplay(null, _lastFinalPosition);
+            _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;
+        }
+
+        //check if castled
+        Coordinate rookPos = ruleCheck.isCastle();
+        if (rookPos!=null){
+            // move the rook
+            IPiece castleRook = null;
+            for (IPiece pieces : _pieceLocation.get(turn)){
+                if (pieces.getRow() == rookPos.getRow() && pieces.getColumn() == rookPos.getColumn()){
+                    Coordinate newPosition = new Coordinate(rookPos.getRow(), (rookPos.getColumn()==0 ? 3 : 5));
+                    pieces.setPosition(newPosition);
+
+                    //representation
+                    modifyDisplay(_representation[rookPos.getRow()][rookPos.getColumn()], newPosition);
+                    modifyDisplay(null, rookPos);
+
+                    //location
+                    _locations[newPosition.getRow()][newPosition.getColumn()] = _locations[rookPos.getRow()][rookPos.getColumn()];
+                    _locations[rookPos.getRow()][rookPos.getColumn()] = null;
+                    break;
+                }
+            }
+            ruleCheck.resetCastle();
+        }
+
 
         _lastOriginalPosition = piece.getPosition();
         _lastFinalPosition = endPosition;
 
         piece.setPosition(endPosition);
 
-//        IPiece removed = null;
-
         //check if a piece is being taken
         if (_representation[endPosition.getRow()][endPosition.getColumn()] != null) {
-            List<Piece> pieces = _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK :Side.WHITE));
+            List<Piece> pieces = _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE));
             for (IPiece find : pieces) {
                 if (find.getRow() == endPosition.getRow() && find.getColumn() == endPosition.getColumn()) {
-//                    removed =find;
                     pieces.remove(find);
                     break;
                 }
@@ -234,8 +224,8 @@ public class Board implements IBoard {
 
 
         //representation
-        modifyBoard(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
-        modifyBoard(null, startPosition);
+        modifyDisplay(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
+        modifyDisplay(null, startPosition);
 
         //location
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];
@@ -245,6 +235,25 @@ public class Board implements IBoard {
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
     }
 
+    private void populate() {
+        //add to list
+        for (Side side : Side.values()) {
+            for (PieceType piece : PieceType.values()) {
+                _pieceLocation.put(side, generateList(side));
+            }
+        }
+
+        //populate representation
+        for (List<Piece> pieceList : _pieceLocation.values()) {
+            for (IPiece piece : pieceList) {
+                modifyDisplay(piece.getType(), piece.getPosition());
+            }
+        }
+    }
+
+    private void modifyDisplay(PieceType piece, ICoordinate position) {
+        _representation[position.getRow()][position.getColumn()] = piece;
+    }
 
     /**
      * helper method to convert column value to integer
@@ -279,7 +288,7 @@ public class Board implements IBoard {
 
         List<Piece> pieces = new ArrayList<Piece>();
 
-        for (PieceType pieceType: PieceType.values()) {
+        for (PieceType pieceType : PieceType.values()) {
             int row = 0;
             if (pieceType != PieceType.PAWN) {
                 if (side.equals(Side.BLACK)) {
@@ -327,14 +336,14 @@ public class Board implements IBoard {
     }
 
     //just for testing purposes
-    private void printAll(){
-        int count =0;
-        for (Side side : Side.values()){
-            for(IPiece piece :_pieceLocation.get(side)){
-                System.out.print(piece.getSide()+" ");
-                System.out.print(piece.getType()+" ");
-                System.out.print(piece.getRow()+" ");
-                System.out.println(piece.getColumn()+" ");
+    private void printAll() {
+        int count = 0;
+        for (Side side : Side.values()) {
+            for (IPiece piece : _pieceLocation.get(side)) {
+                System.out.print(piece.getSide() + " ");
+                System.out.print(piece.getType() + " ");
+                System.out.print(piece.getRow() + " ");
+                System.out.println(piece.getColumn() + " ");
                 count++;
             }
         }

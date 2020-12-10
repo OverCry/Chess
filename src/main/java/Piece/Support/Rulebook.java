@@ -12,6 +12,9 @@ import java.util.Map;
 
 public class Rulebook implements IRulebook {
     private static Rulebook instance = null;
+    private boolean _EnPassant = false;
+//    private boolean _castle = false;
+    private Coordinate _castle = null;
 
     public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<Piece>> _pieceLocation){
         switch (movingPiece.getType()){
@@ -28,6 +31,25 @@ public class Rulebook implements IRulebook {
             default:
                 return pawn(movingPiece,endPosition, _lastOriginalPosition, _lastFinalPosition, _representation, _pieceLocation);
         }
+    }
+
+    @Override
+    public boolean isEnPassant() {
+        if (_EnPassant){
+            _EnPassant =false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Coordinate isCastle() {
+        return _castle;
+    }
+
+    @Override
+    public void resetCastle() {
+        _castle=null;
     }
 
     public boolean king(IPiece movingPiece, ICoordinate endPosition,PieceType[][] locations, Map<Side,List<Piece>> pieces){
@@ -47,7 +69,7 @@ public class Rulebook implements IRulebook {
 
                     //check if rook at that position is moved or not
                     IPiece castleRook = null;
-                    for (IPiece piece: pieces.get(PieceType.ROOK)){
+                    for (IPiece piece: pieces.get(movingPiece.getSide())){
                         if (piece.getRow()==bigRow && piece.getColumn()==7){
                             castleRook=piece;
                             break;
@@ -64,14 +86,16 @@ public class Rulebook implements IRulebook {
                         return false;
                     }
 
-                    if (locations[bigRow][5].equals(" ") && locations[bigRow][6].equals(" ")){
+                    if (locations[bigRow][5]==null && locations[bigRow][6]==(null)){
+                        _castle = new Coordinate(bigRow,7);
+//                        _castle = true;
                         return true;
                     }
                     //long castle
                 } else if (bigColumn==2){
                     //check if rook at that position is moved or not
                     IPiece castleRook = null;
-                    for (IPiece piece: pieces.get(PieceType.ROOK)){
+                    for (IPiece piece: pieces.get(movingPiece.getSide())){
                         if (piece.getRow()==bigRow && piece.getColumn()==0){
                             castleRook=piece;
                             break;
@@ -84,12 +108,15 @@ public class Rulebook implements IRulebook {
                     }
 
                     if (castleRook.getMoved()){
-                        return true;
+                        return false;
                     }
 
 
 
-                    if (locations[bigRow][1].equals(" ") && locations[bigRow][2].equals(" ") && locations[bigRow][3].equals(" ")){
+                    if (locations[bigRow][1]==(null) && locations[bigRow][2]==(null) && locations[bigRow][3]==(null)){
+                        _castle = new Coordinate(bigRow,0);
+
+//                        _castle=true;
                         return true;
                     }
                 } else {
@@ -231,6 +258,8 @@ public class Rulebook implements IRulebook {
             if (lastMoveFinal.getRow()!=smallRow|| lastMoveFinal.getColumn()!=bigColumn){
                 return false;
             }
+
+            _EnPassant=true;
         } else {
             return false;
         }
