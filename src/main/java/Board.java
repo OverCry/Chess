@@ -21,12 +21,12 @@ public class Board implements IBoard {
     //for printing out the output
     private PieceType[][] _representation = new PieceType[8][8];
     //indicate what was the last move
-    private ICoordinate _lastOriginalPosition =new Coordinate(-1,-1);
+    private ICoordinate _lastOriginalPosition = new Coordinate(-1, -1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
-    private String _lastMove = "";
+//    private String _lastMove = "";
 
     //collection of all pieces
-    private Map<PieceType, List<Piece>> _pieceLocation = new HashMap<>();
+    private Map<Side, List<Piece>> _pieceLocation = new HashMap<>();
 
     //current side's turn
     private Side turn = Side.WHITE;
@@ -85,10 +85,11 @@ public class Board implements IBoard {
     }
 
     private void populate() {
-
         //add to list
-        for (PieceType piece : PieceType.values()) {
-            _pieceLocation.put(piece, generateList(piece));
+        for (Side side : Side.values()) {
+            for (PieceType piece : PieceType.values()) {
+                _pieceLocation.put(side, generateList(side));
+            }
         }
 
         //populate representation
@@ -109,12 +110,12 @@ public class Board implements IBoard {
             System.out.println("\n" + turn.toString() + "'s move");
             System.out.print("Move Piece: ");
             String original = scanner.nextLine();
+            if (original.equals("P")){
+                printAll();
+            }
             System.out.print("To: ");
             String end = scanner.nextLine();
             move(original.toLowerCase(), end.toLowerCase());
-//            if (checkmate()) {
-//                break;
-//            }
         }
     }
 
@@ -137,17 +138,16 @@ public class Board implements IBoard {
         Side startPoint = _locations[startPosition.getRow()][startPosition.getColumn()];
 
         //check to make sure the move piece exist
-        if (startPoint==null){
+        if (startPoint == null) {
             System.out.println("You have not selected a piece. Please try again");
             return;
         }
 
         //check to make sure you are moving your own piece
-        if (!startPoint.equals(turn)){
+        if (!startPoint.equals(turn)) {
             System.out.println("You cannot move the opposite side. Please try again");
             return;
         }
-
 
         Side endpoint = _locations[endPosition.getRow()][endPosition.getColumn()];
         //check to make sure your side isn't on the end location
@@ -157,13 +157,13 @@ public class Board implements IBoard {
         }
 
         // see what piece is being moved
-        PieceType type = _representation[startPosition.getRow()][startPosition.getColumn()];
+//        PieceType type = _representation[startPosition.getRow()][startPosition.getColumn()];
 
         IPiece movingPiece = null;
         //find piece
-        for (IPiece piece : _pieceLocation.get(type)) {
+        for (IPiece piece : _pieceLocation.get(turn)) {
             //update piece data, update representation, update location
-            if (piece.getRow()==startPosition.getRow() && piece.getColumn()==startPosition.getColumn()) {
+            if (piece.getRow() == startPosition.getRow() && piece.getColumn() == startPosition.getColumn()) {
                 movingPiece = piece;
                 break;
             }
@@ -175,16 +175,15 @@ public class Board implements IBoard {
         }
 
         //check if move is allowed
-        //set last move type
-//        _lastMove = (_lastFinalPosition.getRow()==-1 ? "": _representation[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()]);
-
-        if (ruleCheck.legal(movingPiece,endPosition,_lastOriginalPosition,_lastFinalPosition,_representation,_pieceLocation)){
+        if (ruleCheck.legal(movingPiece, endPosition, _lastOriginalPosition, _lastFinalPosition, _representation, _pieceLocation)) {
+            //perform move
             changePiece(movingPiece, startPosition, endPosition);
         }
     }
 
     /**
      * method to change the state of helpful information, when a move is determined to be legal
+     *
      * @param piece
      * @param startPosition
      * @param endPosition
@@ -193,34 +192,44 @@ public class Board implements IBoard {
 
         //check if en passant
         //VERY JANK
-        if (_lastMove.equals("P")){
-            if (Math.abs(_lastFinalPosition.getRow()- _lastOriginalPosition.getRow())==2){
-                if (_lastFinalPosition.getRow()==startPosition.getRow()){
-                    if  (_lastFinalPosition.getColumn()==endPosition.getColumn()){
-                        System.out.println(piece.getType());
-                        if  (piece.getType().equals("P")){
-                            for (IPiece pawn :_pieceLocation.get(PieceType.PAWN)){
-                                if (pawn.getRow()==_lastFinalPosition.getRow() && pawn.getColumn()== _lastFinalPosition.getColumn()){
-                                    _pieceLocation.get(PieceType.PAWN).remove(pawn);
-                                    break;
-                                }
-                            }
-                            modifyBoard(null, _lastFinalPosition);
-                            _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;                        }
-                    }
-                }
-            }
-        }
+        //CHANGE
+//        if (_lastMove.equals("P")) {
+//            if (Math.abs(_lastFinalPosition.getRow() - _lastOriginalPosition.getRow()) == 2) {
+//                if (_lastFinalPosition.getRow() == startPosition.getRow()) {
+//                    if (_lastFinalPosition.getColumn() == endPosition.getColumn()) {
+//                        System.out.println(piece.getType());
+//                        if (piece.getType().equals("P")) {
+//                            for (IPiece pawn : _pieceLocation.get(PieceType.PAWN)) {
+//                                if (pawn.getRow() == _lastFinalPosition.getRow() && pawn.getColumn() == _lastFinalPosition.getColumn()) {
+//                                    _pieceLocation.get(PieceType.PAWN).remove(pawn);
+//                                    break;
+//                                }
+//                            }
+//                            modifyBoard(null, _lastFinalPosition);
+//                            _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         _lastOriginalPosition = piece.getPosition();
-        //store latest move
         _lastFinalPosition = endPosition;
 
         piece.setPosition(endPosition);
 
-        //check if a piece is being taken
-        if(_locations[endPosition.getRow()][endPosition.getColumn()]!=null){
+//        IPiece removed = null;
 
+        //check if a piece is being taken
+        if (_representation[endPosition.getRow()][endPosition.getColumn()] != null) {
+            List<Piece> pieces = _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK :Side.WHITE));
+            for (IPiece find : pieces) {
+                if (find.getRow() == endPosition.getRow() && find.getColumn() == endPosition.getColumn()) {
+//                    removed =find;
+                    pieces.remove(find);
+                    break;
+                }
+            }
         }
 
 
@@ -232,21 +241,14 @@ public class Board implements IBoard {
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];
         _locations[startPosition.getRow()][startPosition.getColumn()] = null;
 
-
-
-
-
         //change side's turn
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
-
-
-
     }
-
 
 
     /**
      * helper method to convert column value to integer
+     *
      * @param character
      * @return
      */
@@ -273,39 +275,12 @@ public class Board implements IBoard {
         return column;
     }
 
-    /**
-     * helper method to determine what the moving piece type is
-     * @param character
-     * @return
-     */
-    private PieceType convertAlphaToType(String character) {
-        switch (character.toLowerCase()) {
-            case "k":
-                return PieceType.KING;
-            case "q":
-                return PieceType.QUEEN;
-            case "b":
-                return PieceType.BISHOP;
-            case "r":
-                return PieceType.ROOK;
-            case "n":
-                return PieceType.KNIGHT;
-            default:
-                return PieceType.PAWN;
-        }
-    }
+    private List<Piece> generateList(Side side) {
 
-    /**
-     * helper method to generate to initial board state
-     * @param pieceType
-     * @return
-     */
-    private List<Piece> generateList(PieceType pieceType) {
-
-        int row = 0;
         List<Piece> pieces = new ArrayList<Piece>();
-        for (Side side : Side.values()) {
 
+        for (PieceType pieceType: PieceType.values()) {
+            int row = 0;
             if (pieceType != PieceType.PAWN) {
                 if (side.equals(Side.BLACK)) {
                     row = 7;
@@ -347,7 +322,23 @@ public class Board implements IBoard {
                     break;
             }
         }
+
         return pieces;
+    }
+
+    //just for testing purposes
+    private void printAll(){
+        int count =0;
+        for (Side side : Side.values()){
+            for(IPiece piece :_pieceLocation.get(side)){
+                System.out.print(piece.getSide()+" ");
+                System.out.print(piece.getType()+" ");
+                System.out.print(piece.getRow()+" ");
+                System.out.println(piece.getColumn()+" ");
+                count++;
+            }
+        }
+        System.out.println(count);
     }
 }
 

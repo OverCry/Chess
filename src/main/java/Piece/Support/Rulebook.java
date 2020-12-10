@@ -13,7 +13,7 @@ import java.util.Map;
 public class Rulebook implements IRulebook {
     private static Rulebook instance = null;
 
-    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<PieceType, List<Piece>> _pieceLocation){
+    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<Piece>> _pieceLocation){
         switch (movingPiece.getType()){
             case KING:
                 return king(movingPiece,endPosition,_representation,_pieceLocation);
@@ -30,7 +30,7 @@ public class Rulebook implements IRulebook {
         }
     }
 
-    public boolean king(IPiece movingPiece, ICoordinate endPosition,PieceType[][] locations, Map<PieceType,List<Piece>> pieces){
+    public boolean king(IPiece movingPiece, ICoordinate endPosition,PieceType[][] locations, Map<Side,List<Piece>> pieces){
         int smallRow=getRow(movingPiece);
         int smallColumn=getColumn(movingPiece);
         int bigRow=endPosition.getRow();
@@ -59,8 +59,9 @@ public class Rulebook implements IRulebook {
                         return false;
                     }
 
+                    //todo need to double check
                     if (castleRook.getMoved()){
-                        return true;
+                        return false;
                     }
 
                     if (locations[bigRow][5].equals(" ") && locations[bigRow][6].equals(" ")){
@@ -167,7 +168,7 @@ public class Rulebook implements IRulebook {
         return true;
     }
 
-    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<PieceType, List<Piece>> _pieceLocation){
+    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<Side, List<Piece>> _pieceLocation){
         int smallRow=getRow(movingPiece);
         int smallColumn=getColumn(movingPiece);
         int bigRow=endPosition.getRow();
