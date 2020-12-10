@@ -134,61 +134,66 @@ public class Rulebook implements IRulebook {
         return true;
     }
 
+    /**
+     * logic for queen,
+     * to see if it is performing a valid 'rook' or 'bishop' move
+     * @param movingPiece
+     * @param endPosition
+     * @param locations
+     * @return
+     */
     public boolean queen(IPiece movingPiece, ICoordinate endPosition, PieceType[][] locations){
-        int smallRow = getRow(movingPiece);
-        int smallColumn = getColumn(movingPiece);
-        int bigRow = endPosition.getRow();
-        int bigColumn = endPosition.getColumn();
-
-        int rowDiff = Math.abs(smallRow - bigRow);
-        int colDiff = Math.abs(smallColumn - bigColumn);
+        int rowDiff = Math.abs(movingPiece.getRow() - endPosition.getRow());
+        int colDiff = Math.abs(movingPiece.getColumn() - endPosition.getColumn());
 
         //check if 'bishop' or 'rook' move
         //rook
-        if (smallRow==bigRow || smallColumn==bigColumn){
+        if (rowDiff==0 || colDiff==0){
             return rook(movingPiece,endPosition,locations);
 
             //bishop
         } else if (rowDiff==colDiff){
             return bishop(movingPiece,endPosition,locations);
-
         }
+        //otherwise invalid move
         return false;
 
     }
 
+    /**
+     * logic for bishop movement
+     * ensure movement is legal according to bishop capabilities
+     * @param movingPiece
+     * @param endPosition
+     * @param locations
+     * @return
+     */
     public boolean bishop(IPiece movingPiece, ICoordinate endPosition, PieceType[][] locations){
-        int smallRow=getRow(movingPiece);
-        int smallColumn=getColumn(movingPiece);
-        int bigRow=endPosition.getRow();
-        int bigColumn= endPosition.getColumn();
+        int originRow = movingPiece.getRow();
+        int originColumn = movingPiece.getColumn();
 
-        int rowDiff = (smallRow-bigRow);
-        int colDiff = (smallColumn-bigColumn);
+        int rowDiff = Math.abs(originRow - endPosition.getRow());
+        int colDiff = Math.abs(originColumn - endPosition.getColumn());
 
         //diagonal direction check
         boolean rowPositive = true;
         boolean colPositive = true;
 
         //check if the difference is not the same (didnt move in a diagonal. Helps a latter check
-        if (Math.abs(rowDiff)!=Math.abs(colDiff)){
+        if (rowDiff!=colDiff){
             return false;
         }
 
-        //same row
-        //check which column is larger
+        //calculate which direction the piece is moving
         if (colDiff>0) {
-            // set small to start
             colPositive = false;
         }
-
         if (rowDiff>0) {
-            // set small to start
             rowPositive=false;
         }
 
-        for (int move = 1; move < Math.abs(rowDiff); move++) {
-            if (locations[smallRow+(rowPositive ? move : - move)][smallColumn+ (colPositive ? move : - move)] != null) {
+        for (int move = 1; move < rowDiff; move++) {
+            if (locations[originRow+(rowPositive ? move : - move)][originColumn+ (colPositive ? move : - move)] != null) {
                 return false;
             }
         }
@@ -328,13 +333,6 @@ public class Rulebook implements IRulebook {
         return true;
     }
 
-    private int getRow(IPiece piece){
-        return piece.getRow();
-    }
-
-    private int getColumn(IPiece piece){
-        return piece.getColumn();
-    }
 
     //singleton class to be referenced in the board
     /**

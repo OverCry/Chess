@@ -22,11 +22,9 @@ public class Board implements IBoard {
     //indicate what was the last move
     private ICoordinate _lastOriginalPosition = new Coordinate(-1, -1);
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
-//    private String _lastMove = "";
 
     //collection of all pieces
     private Map<Side, List<Piece>> _pieceLocation = new HashMap<>();
-
     //current side's turn
     private Side turn = Side.WHITE;
 
@@ -89,6 +87,8 @@ public class Board implements IBoard {
             System.out.println("\n" + turn.toString() + "'s move");
             System.out.print("Move Piece: ");
             String original = scanner.nextLine();
+            //for testing
+            //todo comment out when finished
             if (original.equals("P")) {
                 printAll();
             }
