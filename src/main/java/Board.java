@@ -82,11 +82,20 @@ public class Board implements IBoard {
     }
 
     public void play() {
+
         while (true) {
             printBoard();
+            String original = "-h";
             System.out.println("\n" + turn.toString() + "'s move");
-            System.out.print("Move Piece: ");
-            String original = scanner.nextLine();
+            System.out.println("(type \"-h\" for help) \n");
+
+            while (original.equals("-h")) {
+                System.out.print("Move Piece: ");
+                original = scanner.nextLine();
+                if (original.equals("-h")){
+                    printHelp();
+                }
+            }
             //for testing
             //todo comment out when finished
             if (original.equals("P")) {
@@ -95,7 +104,7 @@ public class Board implements IBoard {
             System.out.print("To: ");
             String end = scanner.nextLine();
             move(original.toLowerCase(), end.toLowerCase());
-            if(Checkmate(end)){
+            if(kingAttack(end)){
                 break;
             }
         }
@@ -163,7 +172,13 @@ public class Board implements IBoard {
         }
     }
 
-    private boolean Checkmate(String end){
+    /**
+     * help method to indicate the end of the game
+     * ends the game at checkmate
+     * @param end
+     * @return
+     */
+    private boolean kingAttack(String end){
         if (end.length()==3){
             if (String.valueOf(end.charAt(2)).equals("#")){
                 System.out.println((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
@@ -346,6 +361,21 @@ public class Board implements IBoard {
         }
 
         return pieces;
+    }
+
+    private void printHelp(){
+        System.out.println("\nHelp Menu: \n");
+
+        System.out.println("1. To play, type the co-ordinates of the piece you would like to move");
+        System.out.println("\t Start with the column (alphabets) first before the row (numbers)");
+        System.out.println("\t For example, a move may be \"d2\"");
+        System.out.println("2. When prompted, type the co-ordinates of where you want to place your piece");
+        System.out.println("\t Again, start with the column, then the row");
+        System.out.println("3. If your move will lead to a 'check' on the enemy king, please include a '+' symbol");
+        System.out.println("\t For checkmate, use a '#' symbol instead");
+        System.out.println("4. When castling, you will provide the location of where the king would be after castle");
+        System.out.println("\t For example, white king castling short would end at 'G1', so you would type 'g1'");
+        System.out.println("\n Good luck and have PHUN! \n\n");
     }
 
     //just for testing purposes
