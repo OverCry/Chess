@@ -1,6 +1,6 @@
 # Chess
 
-An attempt to recreate chess at varying levels of flexibility.
+An attempt to recreate chess
 
 This project is just to practice some logic, before trying to recreate this simple game on Unity.
 
@@ -13,6 +13,8 @@ This is an attempt to take some consideration of good coding practices.
 4. The game will help ensure moves are legal
 
 
+
 ## Compromises 
 1. Rather than typical chess notation, the player will input the original location and the final destination of the piece.
-2. The black side is NO LONGER indicated with lower font rather than a colour difference. Enums.Colours are now used to differentiate between each side. 
+2. The black side is NO LONGER indicated with lower font rather than a colour difference. Enums.Colours are now used to differentiate between each side.
+3. The system is designed to trust the user when a check or checkmate has occurred

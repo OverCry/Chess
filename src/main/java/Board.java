@@ -95,13 +95,16 @@ public class Board implements IBoard {
             System.out.print("To: ");
             String end = scanner.nextLine();
             move(original.toLowerCase(), end.toLowerCase());
+            if(Checkmate(end)){
+                break;
+            }
         }
     }
 
     private void move(String origin, String end) {
 
         //check if valid inputs
-        String inputRegex = "[abcdefgh]{1}[12345678]{1}";
+        String inputRegex = "[abcdefgh]{1}[12345678]{1}[+#]?";
         if (!Pattern.matches(inputRegex, origin) || !Pattern.matches(inputRegex, end)) {
             System.out.println("Invalid Inputs. Please try again");
             return;
@@ -158,6 +161,16 @@ public class Board implements IBoard {
             //perform move
             changePiece(movingPiece, startPosition, endPosition);
         }
+    }
+
+    private boolean Checkmate(String end){
+        if (end.length()==3){
+            if (String.valueOf(end.charAt(2)).equals("#")){
+                System.out.println((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
