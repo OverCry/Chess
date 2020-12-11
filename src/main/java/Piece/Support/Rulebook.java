@@ -201,6 +201,7 @@ public class Rulebook implements IRulebook {
         return true;
     }
 
+    //todo remove _piecelocation?
     public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<Side, List<Piece>> _pieceLocation) {
         int originRow = movingPiece.getRow();
         int originColumn = movingPiece.getColumn();

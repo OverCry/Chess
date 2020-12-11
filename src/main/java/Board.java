@@ -180,9 +180,13 @@ public class Board implements IBoard {
      */
     private boolean kingAttack(String end){
         if (end.length()==3){
-            if (String.valueOf(end.charAt(2)).equals("#")){
+            String special = String.valueOf(end.charAt(2);
+            if (special.equals("#")){
                 System.out.println((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
                 return true;
+            } else if (special.equals("+")){
+                System.out.println("Check!");
+
             }
         }
         return false;
@@ -393,49 +397,3 @@ public class Board implements IBoard {
         System.out.println(count);
     }
 }
-
-//    /**
-//     * method to determine if a side is in checkmate
-//     * @return
-//     */
-//    private boolean checkmate() {
-//        //find position of other side king
-//        IPiece kingPiece = null;
-//        for (Piece piece : _pieceLocation.get(PieceType.KING)) {
-//            if (piece.getSide() == turn) {
-//                kingPiece = piece;
-//                break;
-//            }
-//        }
-//
-//        //get a collection of movable spots
-//        List<ICoordinate> freeLocations = new ArrayList<>();
-//        //find 'free' spots
-//        for (int row = kingPiece.getRow() - 1; row < kingPiece.getRow() + 2; row++) {
-//            for (int column = kingPiece.getColumn() - 1; column < kingPiece.getColumn() + 2; column++) {
-//                //check if on board
-//                if (row >= 0 && row < 8 && column >= 0 && column < 8) {
-//                    //check if position is NOT same side
-////                    if (!_locations[row][column].equals(turn)){
-//                    if (!turn.equals(_locations[row][column])) {
-//                        // store locations
-//                        freeLocations.add(new Coordinate(row, column));
-//                    }
-//                }
-//            }
-//        }
-//        //add its own position
-//        freeLocations.add(kingPiece.getPosition());
-//        //compare with 'attack' squares
-//        for (PieceType type : PieceType.values()) {
-//            for (Piece piece : _pieceLocation.get(type)) {
-//                //todo reuse check method
-//            }
-//        }
-//
-//        //check if the piece is moveable or not
-//        if (freeLocations.size() == 0) {
-//            return true;
-//        }
-//        return false;
-//    }
