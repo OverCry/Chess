@@ -2,8 +2,6 @@ package Interfaces;
 
 import Enums.PieceType;
 import Enums.Side;
-import Interfaces.Piece.IPiece;
-import Piece.Piece;
 import Piece.Support.Coordinate;
 
 import java.util.List;

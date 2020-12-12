@@ -3,7 +3,7 @@ package Piece;
 import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
-import Interfaces.Piece.IPiece;
+import Interfaces.IPiece;
 import Piece.Support.Coordinate;
 
 public abstract class Piece implements IPiece{

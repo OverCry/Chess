@@ -1,4 +1,4 @@
-package Interfaces.Piece;
+package Interfaces;
 
 import Enums.PieceType;
 import Enums.Side;

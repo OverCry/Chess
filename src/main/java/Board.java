@@ -1,10 +1,7 @@
 import Enums.Colours;
 import Enums.PieceType;
 import Enums.Side;
-import Interfaces.IBoard;
-import Interfaces.ICoordinate;
-import Interfaces.IRulebook;
-import Interfaces.Piece.IPiece;
+import Interfaces.*;
 import Piece.*;
 import Piece.Support.Coordinate;
 
@@ -14,6 +11,7 @@ import java.util.regex.Pattern;
 public class Board implements IBoard {
 
     private IRulebook ruleCheck;
+    private IScribe move;
     //to quickly indicate which side each piece is on
     private Side[][] _locations = new Side[8][8];
     //for printing out the output
@@ -31,6 +29,7 @@ public class Board implements IBoard {
 
     public Board() {
         ruleCheck = new Rulebook();
+        move = new Scribe();
 
         //belonging
         for (int i = 0; i < 8; i++) {
@@ -108,6 +107,7 @@ public class Board implements IBoard {
             }
         }
         printBoard();
+        move.show();
     }
 
     private void move(String origin, String end) {
@@ -168,7 +168,7 @@ public class Board implements IBoard {
         //check if move is allowed
         if (ruleCheck.legal(movingPiece, endPosition, _lastOriginalPosition, _lastFinalPosition, _representation, _pieceLocation)) {
             //perform move
-            changePiece(movingPiece, startPosition, endPosition);
+            changePiece(movingPiece, startPosition, endPosition, end);
         }
     }
 
@@ -182,7 +182,7 @@ public class Board implements IBoard {
         if (end.length()==3){
             String special = String.valueOf(end.charAt(2));
             if (special.equals("#")){
-                System.out.println((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
+                System.out.println("\n"+(turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
                 return true;
             } else if (special.equals("+")){
                 System.out.println("\nCheck!");
@@ -199,7 +199,9 @@ public class Board implements IBoard {
      * @param startPosition
      * @param endPosition
      */
-    private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition) {
+    private void changePiece(IPiece piece, ICoordinate startPosition, ICoordinate endPosition, String endString) {
+
+        boolean taken = false;
 
         //check if en passant
         if (ruleCheck.isEnPassant()) {
@@ -212,6 +214,7 @@ public class Board implements IBoard {
             }
             modifyDisplay(null, _lastFinalPosition);
             _locations[_lastFinalPosition.getRow()][_lastFinalPosition.getColumn()] = null;
+            taken=true;
         }
 
         //check if castled
@@ -252,6 +255,7 @@ public class Board implements IBoard {
                     break;
                 }
             }
+            taken=true;
         }
 
         //representation
@@ -263,21 +267,24 @@ public class Board implements IBoard {
         _locations[startPosition.getRow()][startPosition.getColumn()] = null;
 
         //check if promotion
+        String promo = "";
         if (piece.getType().equals(PieceType.PAWN)){
             //check if row at the end
             if (endPosition.getRow()==0 ||endPosition.getRow()==7 ){
                 System.out.println("Promote pawn to ?: ");
-                String promo = "";
                 String inputRegex = "[rnbq]{1}";
 
                 if (!Pattern.matches(inputRegex, promo)) {
                     System.out.println("Choose from: (R,N,B,Q)");
-                    promo = scanner.nextLine().toLowerCase();
+                    promo = scanner.nextLine().toUpperCase();
                 }
 
                 promote(promo, endPosition);
             }
         }
+
+        //write move
+        move.write(piece, _representation,_pieceLocation,taken, promo, startPosition.getColumn(), endString);
 
         //change side's turn
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
@@ -388,16 +395,16 @@ public class Board implements IBoard {
         int row = position.getRow();
         int column = position.getColumn();
         switch (promo){
-            case "r":
+            case "R":
                 promoted = new Rook(turn, row, column);
                 break;
-            case "n":
+            case "N":
                 promoted = new Knight(turn, row, column);
                 break;
-            case "b":
+            case "B":
                 promoted = new Bishop(turn, row, column);
                 break;
-            case "q":
+            case "Q":
                 promoted = new Queen(turn, row, column);
                 break;
         }
