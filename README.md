@@ -18,3 +18,8 @@ This is an attempt to take some consideration of good coding practices.
 1. Rather than typical chess notation, the player will input the original location and the final destination of the piece.
 2. The black side is NO LONGER indicated with lower font rather than a colour difference. Enums.Colours are now used to differentiate between each side.
 3. The system is designed to trust the user when a check or checkmate has occurred
+
+## Future improvements
+1. To be able to differentiate between pieces when it is not immediately obvious which piece is being moved
+2. To be able to detect checks and checkmates
+3. To allow resigning and draw offers
