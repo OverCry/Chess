@@ -1,11 +1,9 @@
-package Piece.Support;
-
 import Enums.PieceType;
 import Enums.Side;
 import Interfaces.ICoordinate;
 import Interfaces.IRulebook;
 import Interfaces.Piece.IPiece;
-import Piece.Piece;
+import Piece.Support.Coordinate;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +26,7 @@ public class Rulebook implements IRulebook {
             case KNIGHT:
                 return knight(movingPiece, endPosition);
             default:
-                return pawn(movingPiece, endPosition, _lastOriginalPosition, _lastFinalPosition, _representation, _pieceLocation);
+                return pawn(movingPiece, endPosition, _lastOriginalPosition, _lastFinalPosition, _representation);
         }
     }
 
@@ -202,7 +200,7 @@ public class Rulebook implements IRulebook {
     }
 
     //todo remove _piecelocation?
-    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<Side, List<IPiece>> _pieceLocation) {
+    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations) {
         int originRow = movingPiece.getRow();
         int originColumn = movingPiece.getColumn();
         int bigRow = endPosition.getRow();

@@ -7,7 +7,6 @@ import Interfaces.IRulebook;
 import Interfaces.Piece.IPiece;
 import Piece.*;
 import Piece.Support.Coordinate;
-import Piece.Support.Rulebook;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -108,6 +107,7 @@ public class Board implements IBoard {
                 break;
             }
         }
+        printBoard();
     }
 
     private void move(String origin, String end) {
