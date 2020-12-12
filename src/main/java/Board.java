@@ -28,8 +28,8 @@ public class Board implements IBoard {
     private static Scanner scanner = new java.util.Scanner(System.in);
 
     public Board() {
-        ruleCheck = new Rulebook();
-        move = new Scribe();
+        ruleCheck = Rulebook.getInstance();
+        move = Scribe.getInstance();
 
         //belonging
         for (int i = 0; i < 8; i++) {
