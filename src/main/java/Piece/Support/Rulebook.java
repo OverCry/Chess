@@ -15,7 +15,7 @@ public class Rulebook implements IRulebook {
     private boolean _enPassant = false;
     private Coordinate _castle = null;
 
-    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<Piece>> _pieceLocation) {
+    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<IPiece>> _pieceLocation) {
         switch (movingPiece.getType()) {
             case KING:
                 return king(movingPiece, endPosition, _representation, _pieceLocation);
@@ -51,7 +51,7 @@ public class Rulebook implements IRulebook {
         _castle = null;
     }
 
-    public boolean king(IPiece movingPiece, ICoordinate endPosition, PieceType[][] locations, Map<Side, List<Piece>> pieces) {
+    public boolean king(IPiece movingPiece, ICoordinate endPosition, PieceType[][] locations, Map<Side, List<IPiece>> pieces) {
         int originRow = movingPiece.getRow();
         int originColumn = movingPiece.getColumn();
 
@@ -202,7 +202,7 @@ public class Rulebook implements IRulebook {
     }
 
     //todo remove _piecelocation?
-    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<Side, List<Piece>> _pieceLocation) {
+    public boolean pawn(IPiece movingPiece, ICoordinate endPosition, ICoordinate lastMoveOrigin, ICoordinate lastMoveFinal, PieceType[][] locations, Map<Side, List<IPiece>> _pieceLocation) {
         int originRow = movingPiece.getRow();
         int originColumn = movingPiece.getColumn();
         int bigRow = endPosition.getRow();

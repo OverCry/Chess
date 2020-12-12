@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface IRulebook {
 
-    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<Piece>>  _pieceLocation);
+    public boolean legal(IPiece movingPiece, ICoordinate endPosition, ICoordinate _lastOriginalPosition, ICoordinate _lastFinalPosition, PieceType[][] _representation, Map<Side, List<IPiece>>  _pieceLocation);
 
     public boolean isEnPassant();
 

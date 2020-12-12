@@ -24,7 +24,7 @@ public class Board implements IBoard {
     private ICoordinate _lastFinalPosition = new Coordinate(-1, -1);
 
     //collection of all pieces
-    private Map<Side, List<Piece>> _pieceLocation = new HashMap<>();
+    private Map<Side, List<IPiece>> _pieceLocation = new HashMap<>();
     //current side's turn
     private Side turn = Side.WHITE;
 
@@ -180,12 +180,12 @@ public class Board implements IBoard {
      */
     private boolean kingAttack(String end){
         if (end.length()==3){
-            String special = String.valueOf(end.charAt(2);
+            String special = String.valueOf(end.charAt(2));
             if (special.equals("#")){
                 System.out.println((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE) + " wins");
                 return true;
             } else if (special.equals("+")){
-                System.out.println("Check!");
+                System.out.println("\nCheck!");
 
             }
         }
@@ -245,7 +245,7 @@ public class Board implements IBoard {
 
         //check if a piece is being taken
         if (_representation[endPosition.getRow()][endPosition.getColumn()] != null) {
-            List<Piece> pieces = _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE));
+            List<IPiece> pieces = _pieceLocation.get((turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE));
             for (IPiece find : pieces) {
                 if (find.getRow() == endPosition.getRow() && find.getColumn() == endPosition.getColumn()) {
                     pieces.remove(find);
@@ -254,7 +254,6 @@ public class Board implements IBoard {
             }
         }
 
-
         //representation
         modifyDisplay(_representation[startPosition.getRow()][startPosition.getColumn()], endPosition);
         modifyDisplay(null, startPosition);
@@ -262,6 +261,23 @@ public class Board implements IBoard {
         //location
         _locations[endPosition.getRow()][endPosition.getColumn()] = _locations[startPosition.getRow()][startPosition.getColumn()];
         _locations[startPosition.getRow()][startPosition.getColumn()] = null;
+
+        //check if promotion
+        if (piece.getType().equals(PieceType.PAWN)){
+            //check if row at the end
+            if (endPosition.getRow()==0 ||endPosition.getRow()==7 ){
+                System.out.println("Promote pawn to ?: ");
+                String promo = "";
+                String inputRegex = "[rnbq]{1}";
+
+                if (!Pattern.matches(inputRegex, promo)) {
+                    System.out.println("Choose from: (R,N,B,Q)");
+                    promo = scanner.nextLine().toLowerCase();
+                }
+
+                promote(promo, endPosition);
+            }
+        }
 
         //change side's turn
         turn = (turn.equals(Side.WHITE) ? Side.BLACK : Side.WHITE);
@@ -276,7 +292,7 @@ public class Board implements IBoard {
         }
 
         //populate representation
-        for (List<Piece> pieceList : _pieceLocation.values()) {
+        for (List<IPiece> pieceList : _pieceLocation.values()) {
             for (IPiece piece : pieceList) {
                 modifyDisplay(piece.getType(), piece.getPosition());
             }
@@ -316,9 +332,9 @@ public class Board implements IBoard {
         return column;
     }
 
-    private List<Piece> generateList(Side side) {
+    private List<IPiece> generateList(Side side) {
 
-        List<Piece> pieces = new ArrayList<Piece>();
+        List<IPiece> pieces = new ArrayList<IPiece>();
 
         for (PieceType pieceType : PieceType.values()) {
             int row = 0;
@@ -365,6 +381,40 @@ public class Board implements IBoard {
         }
 
         return pieces;
+    }
+
+    private void promote(String promo, ICoordinate position){
+        IPiece promoted =null;
+        int row = position.getRow();
+        int column = position.getColumn();
+        switch (promo){
+            case "r":
+                promoted = new Rook(turn, row, column);
+                break;
+            case "n":
+                promoted = new Knight(turn, row, column);
+                break;
+            case "b":
+                promoted = new Bishop(turn, row, column);
+                break;
+            case "q":
+                promoted = new Queen(turn, row, column);
+                break;
+        }
+
+        //remove pawn that is being promoted
+        for(IPiece piece: _pieceLocation.get(turn)){
+            if (piece.getRow()==row && piece.getColumn()==column){
+                _pieceLocation.get(turn).remove(piece);
+                break;
+            }
+        }
+        //add piece to list
+        _pieceLocation.get(turn).add(promoted);
+
+        //add representation
+        _representation[row][column]=promoted.getType();
+
     }
 
     private void printHelp(){
