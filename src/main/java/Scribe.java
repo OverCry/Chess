@@ -33,19 +33,33 @@ public class Scribe implements IScribe {
                 input += type.getRepresentation();
             }
 
+            //todo future refactor away
             //check if clarification is necessary
-
-            //check if a piece is taken
-            if (take) {
-                if (type.equals(PieceType.PAWN)) {
-                    //original location
-                    input += (char) (65 + startColumnInt);
-                }
-                input += "x";
-            }
+            int row = piece.getRow();
+            int column = piece.getColumn();
+//            switch (piece.getType()){
+//
+//                case QUEEN:
+//                    break;
+//                case BISHOP:
+//                    break;
+//                case ROOK:
+//                    break;
+//                case KNIGHT:
+//                    break;
+//            }
+//
+//            //check if a piece is taken
+//            if (take) {
+//                if (type.equals(PieceType.PAWN)) {
+//                    //original location
+//                    input += (char) (65 + startColumnInt);
+//                }
+//                input += "x";
+//            }
 
             //input end position
-            input += "" + (char) (65 + piece.getColumn()) + (piece.getRow() + 1);
+            input += "" + (char) (65 + column) + (row + 1);
 
             //check if promoted
             if (!promoType.equals("")) {
